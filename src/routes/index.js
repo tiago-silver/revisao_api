@@ -6,9 +6,11 @@ const routes = Router()
 
 // importar as rotas (usersRoutes)
 const usersRoutes = require("./users.routes")
+const notesRoutes = require("./notes.routes")
 
 // Ativar as rotas
 routes.use("/users", usersRoutes)
+routes.use("/notes", notesRoutes)
 
 // Exportar o routes
 module.exports = routes
