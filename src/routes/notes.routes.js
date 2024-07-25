@@ -6,13 +6,15 @@ const NotesController = require("../controller/notesController")
 // Inicilizar o Router
 const notesRoutes = Router()
 
-
-
 // Instanciando UsersController
 const notesController = new NotesController()
 
 // Definindo o metódo POST
+notesRoutes.get("/", notesController.index)
 notesRoutes.post("/:user_id", notesController.create)
+
+notesRoutes.get("/:id", notesController.show)
+notesRoutes.delete("/:id", notesController.delete)
 
 
 
