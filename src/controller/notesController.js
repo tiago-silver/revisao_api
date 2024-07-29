@@ -40,7 +40,7 @@ class NotesController{
     async show(request, response) {
         const { id} = request.params;
 
-        // Busca notas no banco de dados 
+        // Busca notas no banco de dados referente ao id de users
         const note = await knex("notes").where({id}).first();
 
         // Buscar as tags e links
@@ -67,11 +67,35 @@ class NotesController{
 
     // Método para listar notas
     async index(request, response){
-        const {user_id} = request.query
+        const {title, user_id, tags} = request.query
 
-        const notes = await knex("notes").where({user_id}).orderBy("title")
+        let notes;
+        // Verifica se existe uma pesquisa por tags
+        if(tags){
+            // atribui o texto de pesquisa das tags em uma array
+            const filtertags = tags.split(',').map(tag => tag.trim());
+            
+            // Conectando tabelas
+            notes = await knex("tags")
+            .select([
+                "notes.id",
+                "notes.title",
+                "notes.user_id"
+            ])
+            .where("notes.user_id", user_id)
+            .whereLike("notes.title", `%${title}%`)
+            .whereIn("name", filtertags)
+            .innerJoin("notes", "notes.id", "tags.note_id")
+            .orderBy("notes.title")
 
-        response.json({notes})
+        }else{
+            notes = await knex("notes")
+            .where({user_id})
+            .whereLike("title",`%${title}%`)
+            .orderBy("title")
+        }
+
+        response.json(notes)
     }
 }
 module.exports = NotesController

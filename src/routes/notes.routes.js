@@ -9,7 +9,7 @@ const notesRoutes = Router()
 // Instanciando UsersController
 const notesController = new NotesController()
 
-// Definindo o metódo POST
+// Definindo os métodos
 notesRoutes.get("/", notesController.index)
 notesRoutes.post("/:user_id", notesController.create)
 
