@@ -73,7 +73,7 @@ class NotesController{
         // Verifica se existe uma pesquisa por tags
         if(tags){
             // atribui o texto de pesquisa das tags em uma array
-            const filtertags = tags.split(',').map(tag => tag.trim());
+            const filterTags = tags.split(',').map(tag => tag.trim());
             
             // Conectando tabelas
             notes = await knex("tags")
@@ -84,7 +84,7 @@ class NotesController{
             ])
             .where("notes.user_id", user_id)
             .whereLike("notes.title", `%${title}%`)
-            .whereIn("name", filtertags)
+            .whereIn("name", filterTags)
             .innerJoin("notes", "notes.id", "tags.note_id")
             .orderBy("notes.title")
 
@@ -95,7 +95,24 @@ class NotesController{
             .orderBy("title")
         }
 
-        response.json(notes)
+        // Buscar todas as tags pelo user_id
+        const UsersTags = await knex("tags")
+        .where({user_id})
+
+        // retorna as notas com as tags relacionadas 
+        const notesWithTags = notes.map(note => {
+
+            // Filtra e retorna somente as tags relacionadas com essas notas
+            const notesTags = UsersTags.filter(tag => tag.note_id === note.id);
+
+            return {
+                ...note,
+                tags : notesTags
+            }
+        })
+
+
+        response.json(notesWithTags)
     }
 }
 module.exports = NotesController
