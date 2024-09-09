@@ -1,5 +1,4 @@
 //  importar o knex
-const { request } = require("express");
 const knex = require("../database/knex")
 
 class NotesController{
@@ -33,7 +32,7 @@ class NotesController{
         })
 
         await knex("tags").insert(tagsInsert);
-        response.json()
+        return response.json()
     }
 
     // Método para mostrar notas
@@ -62,7 +61,7 @@ class NotesController{
 
         await knex("notes").where({id}).delete()
 
-        response.json();
+        return response.json();
     }
 
     // Método para listar notas
@@ -112,7 +111,7 @@ class NotesController{
         })
 
 
-        response.json(notesWithTags)
+        return response.json(notesWithTags)
     }
 }
 module.exports = NotesController
