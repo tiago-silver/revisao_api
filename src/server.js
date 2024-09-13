@@ -1,24 +1,26 @@
 
 // importação do express
 const express = require('express')
-
 // Importação da biblioteca express async-errors
 require("express-async-errors")
-
 // Importar a classe AppError
 const AppError = require("./utils/AppError")
-
 // Importar migrationsRun
 const migrationsRun = require("./database/sqlite/migrations")
+// importa as rotas
+const routes = require("./routes")
+// Importação da configurações de uploads
+const uploadConfig = require("./configs/upload")
 
 // Iniciallização do express
 const app = express()
 
-// importa as rotas
-const routes = require("./routes")
 
 // Definição do formato da saída de informações da api
 app.use(express.json())
+
+// Ativar para buscar a imagem de perfil do usuário
+app.use("/files", express.static(uploadConfig.UPLOADS_FOLDER))
 
 // Ativar as rotas
 app.use(routes)
