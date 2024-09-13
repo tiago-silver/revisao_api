@@ -9,9 +9,15 @@ const notesRoutes = Router()
 // Instanciando UsersController
 const notesController = new NotesController()
 
+// Importar middleware do token do usuÁrio
+ const ensureAuthentication = require("../middlewares/ensureAuthentication")
+ 
+// utilizando as middlewares para todas as rotas
+ notesRoutes.use(ensureAuthentication)
+
 // Definindo os métodos
 notesRoutes.get("/", notesController.index)
-notesRoutes.post("/:user_id", notesController.create)
+notesRoutes.post("/", notesController.create)
 
 notesRoutes.get("/:id", notesController.show)
 notesRoutes.delete("/:id", notesController.delete)

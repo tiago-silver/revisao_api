@@ -14,8 +14,9 @@ function ensureAuthentication(request, response, next) {
 
     // Verificação se existe token
     if(!authHeader){
-        throw new AppError('Jwt não informado!', 401)
+        throw new AppError('Jwt Token não informado!', 401)
     }
+    
 
     // Acessar através de um vetor as informações do headers, e quebrar o texto que a contém
     const [, token] = authHeader.split(" ")
@@ -30,11 +31,14 @@ function ensureAuthentication(request, response, next) {
         request.user = {
             id: Number(user_id),
         };
+       
 
         return next()
     } catch {
-        throw new AppError('Jwt token inválido!', 401)
+        throw new AppError('Jwt token inválido!', 401) 
     }
 
 
 }
+
+module.exports = ensureAuthentication

@@ -33,12 +33,15 @@ class usersController{
     // Criação do método de atualização (PUT)
     async update(request, response){
         const {name, email, password, oldPassword } = request.body
-        const {id} = request.params
+
+        // Mudar a forma de pegar o id do usuário 
+        const user_id = request.user.id;
+        
 
         const database = await sqliteConnection()
 
         // Busacar usuário correspondenete ao id
-        const user = await database.get("SELECT * FROM users WHERE id = (?)", [id])
+        const user = await database.get("SELECT * FROM users WHERE id = (?)", [user_id])
 
         if(!user){
             throw new AppError("Usuário não encontrado!")
@@ -76,7 +79,7 @@ class usersController{
             password = ?, 
             updated_at = DATETIME("now")
             WHERE id = ?`,
-            [user.name, user.email, user.password,  id])
+            [user.name, user.email, user.password, user_id])
 
         return response.status(200).json({"message": "Dados atualizado com sucesso!"})
     }
