@@ -27,8 +27,9 @@ class usersController{
         // Insere o novo usuário no banco de dados
         await database.run("INSERT INTO users (name, email, password) VALUES(?, ?, ?)", [name, email, hashedPassword ])
 
-        return response.status(201).json()
+        return response.status(201).json({message: 'Usuário cadastrado com sucesso!'})
     }
+
 
     // Criação do método de atualização (PUT)
     async update(request, response){

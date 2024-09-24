@@ -15,9 +15,14 @@ const uploadConfig = require("./configs/upload")
 // Iniciallização do express
 const app = express()
 
+// Importação do cors (Biblioteca para conectar p beck com front)
+const cors = require("cors")
 
 // Definição do formato da saída de informações da api
 app.use(express.json())
+
+// Ativar o cors 
+app.use(cors())
 
 // Ativar para buscar a imagem de perfil do usuário
 app.use("/files", express.static(uploadConfig.UPLOADS_FOLDER))
