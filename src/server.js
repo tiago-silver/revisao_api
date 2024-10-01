@@ -3,6 +3,8 @@
 const express = require('express')
 // Importação da biblioteca express async-errors
 require("express-async-errors")
+// Ativação do dotenv para o acesso das variáveis de ambiente
+require("dotenv/config")
 // Importar a classe AppError
 const AppError = require("./utils/AppError")
 // Importar migrationsRun
@@ -54,7 +56,7 @@ app.use((error, request, response, next) =>{
 
 
 // informando o endereço da porta 
-const PORT = 3333
+const PORT = process.env.PORT || 3333
 
 // Ativar o servidor
 app.listen(PORT, (()=> console.log(`O servidor estar rodando na porta ${PORT}`)))
