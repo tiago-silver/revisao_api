@@ -7,27 +7,29 @@ const sqliteConnection = require('../database/sqlite')
 // Importação da biblioteca bcryptjs para criptografar a senha
 const {hash, compare} = require("bcryptjs")
 
+// Importe da classe de reposditóriod
+const UsersRepository = require("../repositories/UsersRepository")
+
+// Import do service que separa a regra de negócio da lógica de dados e da controller
+const UserCreateServices = require("../services/UserCreateServices")
+
 // Criação da classe usersController
 class usersController{
     // criação dos metódos
    async create(request, response){
         const {name, email, password} = request.body;
-        // Inicia a conexão com banco de dados
-        const database = await sqliteConnection()
+       
+        // instanciar userRepositories
+        const userRepository = new UsersRepository()
 
-        // Verifica se o email já existe
-        const checkUserEmailExists = await database.get("SELECT * FROM users WHERE email = (?)", [email])
-         if(checkUserEmailExists){
-            throw new AppError("Este email já existe!")
-         }
+        // Instanciar a classe de services
+        const userCreateServices = new UserCreateServices(userRepository)
+        // Chama o método execute dentro de service
+        await userCreateServices.execute({name, email, password})
+        
 
-        // Criptografa a senha
-        const hashedPassword = await hash(password , 8)
 
-        // Insere o novo usuário no banco de dados
-        await database.run("INSERT INTO users (name, email, password) VALUES(?, ?, ?)", [name, email, hashedPassword ])
-
-        return response.status(201).json({message: 'Usuário cadastrado com sucesso!'})
+        return response.status(201).json({message: "Usuário cadastrado com sucesso!"})
     }
 
 
